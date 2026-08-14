@@ -7,6 +7,7 @@ import { UserContextProvider } from "./Utils/UserContext"
 import NewTask from "./Pages/NewTask"
 import { Toaster } from "react-hot-toast"
 import Edittask from "./Pages/Edittask"
+import Profile from "./Pages/Profile"
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/new" element={<NewTask />} />
           <Route path="/edit" element={<Edittask />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
       </Routes>

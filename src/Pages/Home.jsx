@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Navbar from '../Components/Navbar'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -7,6 +7,9 @@ const Home = () => {
 
   const [data, setData] = useState([])
   const nav = useNavigate()
+  const pendingRef = useRef(null)
+  const workingRef = useRef(null)
+  const completedRef = useRef(null)
 
   const priorityStyles = {
     high: "bg-red-100 text-red-700 border border-red-200",
@@ -32,7 +35,12 @@ const Home = () => {
   const TaskCard = ({ item }) => {
     return (
       <article
+        onDragStart={(e) => {
+          e.dataTransfer.setData("yedraghorhahai", e.target.id)
+          // console.log(e.target.id)
+        }}  
         key={item._id}
+        id={item._id}
         draggable={true}
         className="
           group
@@ -160,13 +168,43 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="
+
+
+
+
+
+            <div 
+              ref={pendingRef}
+               onDragOver={(e) => {
+                e.preventDefault()
+              }}
+
+              onDrop={(e) => {
+                const id = e.dataTransfer.getData("yedraghorhahai")
+                pendingRef.current.append(document.getElementById(id))
+
+                axios.patch(import.meta.env.VITE_BACKEND_URL + `/tasks/change-status/${id}`, {status : "pending"}, {withCredentials : true})
+                .then((res) => {
+                  console.log(res)
+                })
+              }}
+              className="
               p-5
               space-y-4
               h-[65vh]
               overflow-y-auto
               scrollbar-none
             ">
+
+
+
+
+
+
+
+
+
+
 
               {data.map((item) => {
 
@@ -220,13 +258,51 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div 
+            ref={workingRef}
+              onDragOver={(e) => {
+                e.preventDefault()
+              }}
+
+              onDrop={(e) => {
+                const id = e.dataTransfer.getData("yedraghorhahai")
+                workingRef.current.append(document.getElementById(id))
+             
+                axios.patch(import.meta.env.VITE_BACKEND_URL + `/tasks/change-status/${id}`, {status : "working"}, {withCredentials : true})
+                .then((res) => {
+                  console.log(res)
+                })
+              }}
+              className="
               p-5
               space-y-4
               h-[65vh]
               overflow-y-auto
               scrollbar-none
             ">
+
+
+
+
+
+
+
+
+
 
               {data.map((item) => {
 
@@ -280,13 +356,47 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="
+
+
+
+
+
+
+
+
+            <div 
+              ref={completedRef}
+               onDragOver={(e) => {
+                e.preventDefault()
+              }}
+
+              onDrop={(e) => {
+                // completedRef.current.append(document.getElementById(e.dataTransfer.getData("yedraghorhahai")))
+              
+               const id = e.dataTransfer.getData("yedraghorhahai")
+                completedRef.current.append(document.getElementById(id))
+             
+                axios.patch(import.meta.env.VITE_BACKEND_URL + `/tasks/change-status/${id}`, {status : "completed"}, {withCredentials : true})
+                .then((res) => {
+                  console.log(res)
+                })
+              
+              }}
+              className="
               p-5
               space-y-4
               h-[65vh]
               overflow-y-auto
               scrollbar-none
             ">
+
+
+
+
+
+
+
+
 
               {data.map((item) => {
 

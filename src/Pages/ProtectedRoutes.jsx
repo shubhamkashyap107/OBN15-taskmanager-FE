@@ -12,7 +12,7 @@ const ProtectedRoutes = () => {
         async function getData(){
             try {
                 const data = await axios.get(import.meta.env.VITE_BACKEND_URL + "/users/get-user-data", {withCredentials : true})
-                setData(data)
+                setData(data.data.data)
             } catch (error) {
                 nav("/login")
             }
